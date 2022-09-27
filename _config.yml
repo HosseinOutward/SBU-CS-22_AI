@@ -9,8 +9,8 @@ description: >
 version:          1.0
 gitbook_version:  3.2.3
 
-url:              'https://HosseinOutward.github.io'
-baseurl:          '/CS-SBU-22_AI'
+url:              'https://HosseinOutward.github.io/SBU-CS-22_AI'
+baseurl:          '/SBU-CS-22_AI'
 rss:              RSS
 
 # bootstrap: use the remote theme for the site itself
