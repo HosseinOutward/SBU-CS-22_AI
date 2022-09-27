@@ -1,16 +1,16 @@
 # Configurations
-title:            Jekyll Gitbook
-longtitle:        Jekyll Gitbook
-author:           HE Tao
-email:            sighingnow@gmail.com
+title:            AI - CSSBU22
+longtitle:        AI CS course at SBU for 2022
+author:           Seyed Hossein Mohammadi
+email:            hossenmsignin@gmail.com
 description: >
-  Build Jekyll site with the GitBook style.
+  AI CS course material and assignment description for 2022 taught by Ali Katanforoosh.
 
 version:          1.0
 gitbook_version:  3.2.3
 
-url:              'https://sighingnow.github.io'
-baseurl:          '/jekyll-gitbook'
+url:              'https://HosseinOutward.github.io'
+baseurl:          '/CS-SBU-22_AI'
 rss:              RSS
 
 # bootstrap: use the remote theme for the site itself
