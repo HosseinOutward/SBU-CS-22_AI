@@ -1,9 +1,3 @@
----
-layout: home
-title: Github readme
-permalink: /
----
-
 **Data Science · Fall 2021 · [SBU Computer Science Dept.](http://cs.sbu.ac.ir/)**\
 
 Instructor: Dr. Ali Katanforoosh 
