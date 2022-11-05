@@ -42,7 +42,7 @@ def main():
         # Getting agent info from director
         for message in client.Watch(Key(type="world", name="director-init", namespace="sbu-ai-2022")):
             response = json.loads(message.content)
-            me = Agent(perceive, 0)
+            me = Agent()
             break
 
         # Broadcasting our readiness to director
@@ -70,7 +70,7 @@ def main():
                 else:
                     print("acting ...")
                     client.Put(Message(key=Key(type="action", name="actor", namespace="sbu-ai-2022"), content=json.dumps({
-                        "action": me.act()
+                        "action": me.act(perceive())
                     })))
                     print("done")
             except Exception as e:

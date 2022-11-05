@@ -16,14 +16,14 @@ sample_input_json={
 if __name__ == "__main__":
     game = Simulator(sample_input_json['map'], sample_input_json['location'])
     interface=Interface()
-    agent = Agent(interface.perceive)
+    agent = Agent()
     gui = Graphics()
 
     action_count=0
     print("initial map")
     gui.display(game)
     while not (interface.goal_test(game)):
-        action = agent.act(game)
+        action = agent.act(interface.perceive(game))
         
         print("attempting", action)
         interface.evolve(game, action)

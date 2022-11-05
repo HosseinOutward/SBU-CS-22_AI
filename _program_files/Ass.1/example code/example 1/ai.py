@@ -1,27 +1,32 @@
 import random
 from time import time
-import json
 from sim import Simulator, Interface
+import json
+
+
+# *** you can change everything except the name of the class, the act function and the sensor_data ***
 
 
 class Agent:
-    def __init__(self, precieve_func):
-        # *** DO NOT CHANGE THE precieve_func ***
-        self.precieve_func = precieve_func
-        # *** DO NOT CHANGE THE precieve_func ***
+    # ^^^ DO NOT change the name of the class ***
 
+    def __init__(self):
         self.predicted_actions = []
 
-    def act(self, state):
-        # *** DO NOT CHANGE THE json_sensor_data ***
-        json_sensor_data = json.loads(self.precieve_func(state))
-        # *** DO NOT CHANGE THE json_sensor_data ***
+    # the act function takes a json string as input
+    # and outputs an action string
+    # ('U' is go up,   'L' is go left,   'R' is go right,   'D' is go down,  'C' is clean tile)
+    def act(self, percept):
+        # ^^^ DO NOT change the act function above ***
+
+        sensor_data = json.loads(percept)
+        # ^^^ DO NOT change the sensor_data above ***
 
         alg = self.BFS_SAMPLE_CODE
     
         if self.predicted_actions == []:
             t0=time()
-            initial_state=Simulator(json_sensor_data['map'], json_sensor_data['location'])
+            initial_state=Simulator(sensor_data['map'], sensor_data['location'])
             self.predicted_actions = alg(initial_state)
             print("run time:", time()-t0)
 

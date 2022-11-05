@@ -16,14 +16,14 @@ sample_input_json={
 if __name__ == "__main__":
     game = Simulator(sample_input_json['map'], sample_input_json['location'])
     interface=Interface()
-    agent = Agent(interface)
+    agent = Agent()
     gui = Graphics()
 
     action_count=0
     print("initial map")
     gui.display(game)
     while not (interface.goal_test(game)):
-        action = agent.act(game)
+        action = agent.act(interface.perceive(game))
         
         print("attempting", action)
         interface.evolve(game, action)
@@ -33,5 +33,7 @@ if __name__ == "__main__":
 
     print(
         "\n\nпобеда!!!",
-        "\nyour cost (number of actions):", action_count
+        "\nyour cost (number of actions):", action_count,
+        '\n\ncurrent map state:'
     )
+    gui.display(game)
