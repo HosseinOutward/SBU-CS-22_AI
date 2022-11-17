@@ -64,3 +64,7 @@ class Interface:
         # TODO return list of legal actions
         return ["U","L","R","D","C"]
 
+    def valid_states(self, state):
+        # TODO return list of legal states
+        return [self.copy_state(state)]
+

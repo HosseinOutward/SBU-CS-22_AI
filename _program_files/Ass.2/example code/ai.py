@@ -2,6 +2,10 @@ import random
 from time import time
 from sim import Simulator, Interface
 import json
+import numpy as np
+from queue import PriorityQueue
+
+
 
 
 # *** you can change everything except the name of the class, the act function and the sensor_data ***
@@ -26,7 +30,7 @@ class Agent:
     
         if self.predicted_actions == []:
             t0=time()
-            initial_state=Simulator(sensor_data['map'], sensor_data['location'])
+            initial_state=Simulator(sensor_data['coordinates'], sensor_data['stick_together'])
             self.predicted_actions = alg(initial_state)
             print("run time:", time()-t0)
 
@@ -34,23 +38,30 @@ class Agent:
 
         return action
 
-    def BFS_SAMPLE_CODE(self, root_game):
+    def heuristic(self, state):
+        axs = state.coordinates.T
+        a = np.unique(axs[0]).shape[0]+\
+            np.unique(axs[1]).shape[0]+\
+            np.unique(axs[2]).shape[0]
+        return a
+
+    def A_star_ramproblem(self, root_game):
         interface=Interface()
 
-        q = []
         # append the first state as (state, action_history)
-        q.append([root_game, []])
+        node=[root_game, [[-1,-1,-1]]]
+        q_i = PriorityQueue()
+        q_i.put((float('inf'), 0))
+        p=[node]
 
-        while q:
+        while not q_i.empty():
             # pop first element from queue
-            node = q.pop(0)
-            
+            best_i = q_i.get()[1]
+            node = p[best_i]
+
             # get the list of legal actions
-            actions_list = interface.valid_actions(node)
-            
-            # randomizing the order of child generation
-            random.shuffle(actions_list)
-            
+            actions_list = interface.valid_actions(node[0], np.transpose(node[1])[1])
+
             for action in actions_list:
                 # copy the current state
                 child_state = interface.copy_state(node[0])
@@ -59,7 +70,38 @@ class Agent:
                 interface.evolve(child_state, action)
                 
                 # add children to queue
-                q.append([child_state, [action] + node[1]])
+                new_node = [child_state, [action] + node[1]]
+                q_i.put((self.heuristic(child_state), len(p)))
+                p.append( new_node )
                 
+                # return if goal test is true
+                if interface.goal_test(child_state): return [action] + node[1]
+    def BFS_SAMPLE_CODE(self, root_game):
+        interface=Interface()
+
+        q = []
+        # append the first state as (state, action_history)
+        q.append([root_game, [[-1,-1,-1]]])
+
+        while q:
+            # pop first element from queue
+            node = q.pop(0)
+
+            # get the list of legal actions
+            actions_list = interface.valid_actions(node[0], np.transpose(node[1])[1])
+
+            # randomizing the order of child generation
+            np.random.shuffle(actions_list)
+
+            for action in actions_list:
+                # copy the current state
+                child_state = interface.copy_state(node[0])
+
+                # take action and change the copied node
+                interface.evolve(child_state, action)
+
+                # add children to queue
+                q.append([child_state, [action] + node[1]])
+
                 # return if goal test is true
                 if interface.goal_test(child_state): return [action] + node[1]
