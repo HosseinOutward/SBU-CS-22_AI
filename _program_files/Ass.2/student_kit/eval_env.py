@@ -177,5 +177,4 @@ def test_one_problemset(sample_input_json):
 
 with open(r"problem_set.txt", 'r') as fp: res=eval(fp.read())
 cost=test_one_problemset(res[int(sys.argv[1])])
-print('\n','\n')
-print(cost)
+print(cost, file=sys.stdout)

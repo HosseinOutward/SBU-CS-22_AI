@@ -1,5 +1,6 @@
 import subprocess
 from time import time
+import csv
 
 python_dir = r'?????\python.exe'
 
@@ -13,13 +14,18 @@ for i in range(len(res)):
     ok = True
     try:
         t = time()
-        r = subprocess.run([python_dir, r'eval_env.py', str(i)], timeout=timeout_sec)
+        r = subprocess.run([python_dir, r'eval_env.py', str(i)], capture_output=True, timeout=timeout_sec)
         if r.returncode != 0: raise "code raised error"
         t = time()-t
-        score.append({'problem': i, 'status': 'completed', 'run_time': t,            'score': 1 / s})
+        score.append({'problem': i, 'status': 'completed', 'run_time': round(t,4),
+                      'score': 1 / int(str(r.stdout).split(r'\n')[-2].split(r'\r')[0])*1000})
     except subprocess.TimeoutExpired as e:
-        score.append({'problem': i, 'status': 'timeout',   'run_time': float('nan'), 'score': 0})
+        score.append({'problem': i, 'status': 'timeout', 'run_time': float('nan'), 'score': 0})
     except:
-        score.append({'problem': i, 'status': 'error',     'run_time': float('nan'), 'score': 0})
+        score.append({'problem': i, 'status': 'error', 'run_time': float('nan'), 'score': 0})
     print('result:', score[-1])
-print("whole test\n",score)
+
+with open('people.csv', 'w', newline='') as output_file:
+    dict_writer = csv.DictWriter(output_file, score[0].keys())
+    dict_writer.writeheader()
+    dict_writer.writerows(score)
