@@ -40,10 +40,13 @@ class Agent:
 
     def heuristic(self, state):
         axs = state.coordinates.T
-        a = np.unique(axs[0]).shape[0]+\
-            np.unique(axs[1]).shape[0]+\
-            np.unique(axs[2]).shape[0]
-        return (a-9)/len(state.real_joints)
+        # a = np.unique(axs[0]).shape[0]+\
+        #     np.unique(axs[1]).shape[0]+\
+        #     np.unique(axs[2]).shape[0]
+        a=abs(np.unique(axs[0], return_counts=True)[1]).sum()+\
+        abs(np.unique(axs[1], return_counts=True)[1]).sum()+\
+        abs(np.unique(axs[2], return_counts=True)[1]).sum()
+        return (a-27*3)/len(state.real_joints)
 
     def A_star_ramproblem(self, root_game):
         interface=Interface()

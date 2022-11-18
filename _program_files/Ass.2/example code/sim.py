@@ -136,9 +136,9 @@ class Interface:
 
     def goal_test(self, state):
         axs = state.coordinates.T
-        if np.unique(axs[0]).shape[0] != 3 or \
-           np.unique(axs[1]).shape[0] != 3 or \
-           np.unique(axs[2]).shape[0] != 3:
+        if abs(np.unique(axs[0], return_counts=True)[1]-9).sum()!=0 or \
+           abs(np.unique(axs[1], return_counts=True)[1]-9).sum()!=0 or \
+           abs(np.unique(axs[2], return_counts=True)[1]-9).sum()!=0:
             return False
         return True
 
