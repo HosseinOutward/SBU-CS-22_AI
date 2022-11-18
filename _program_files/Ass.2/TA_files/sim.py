@@ -118,7 +118,6 @@ class Interface:
         pass
 
     def evolve(self, state, action):
-        state.past_action_joint = action[0]
         state.take_action(*action)
 
     def copy_state(self, state):

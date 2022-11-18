@@ -1,9 +1,9 @@
-from collections import deque
-from sklearn.decomposition import PCA
+# from sklearn.decomposition import PCA
 import json
 import numpy as np
 from functools import lru_cache
 from scipy.spatial.transform import Rotation
+import sys
 
 
 @lru_cache()
@@ -107,10 +107,10 @@ class Simulator:
             self.coordinates[:joint_num]= \
                 self.coordinates[:joint_num]@rotation_matrix(axi, (-degree90)%4)
 
-    def __eq__(self, other):
-        mat1 = self.coordinates - self.coordinates[0]
-        mat2 = other.coordinates - other.coordinates[0]
-        return (PCA().fit_transform(mat1) == PCA().fit_transform(mat2)).all()
+    # def __eq__(self, other):
+    #     mat1 = self.coordinates - self.coordinates[0]
+    #     mat2 = other.coordinates - other.coordinates[0]
+    #     return (PCA().fit_transform(mat1) == PCA().fit_transform(mat2)).all()
 
 
 class Interface:
@@ -118,7 +118,6 @@ class Interface:
         pass
 
     def evolve(self, state, action):
-        state.past_action_joint = action[0]
         state.take_action(*action)
 
     def copy_state(self, state):
@@ -137,8 +136,8 @@ class Interface:
     def goal_test(self, state):
         axs = state.coordinates.T
         if abs(np.unique(axs[0], return_counts=True)[1]-9).sum()!=0 or \
-           abs(np.unique(axs[1], return_counts=True)[1]-9).sum()!=0 or \
-           abs(np.unique(axs[2], return_counts=True)[1]-9).sum()!=0:
+                abs(np.unique(axs[1], return_counts=True)[1]-9).sum()!=0 or \
+                abs(np.unique(axs[2], return_counts=True)[1]-9).sum()!=0:
             return False
         return True
 
@@ -159,3 +158,24 @@ class Interface:
     def valid_state(self, state):
         axs = state.coordinates
         return len(np.unique(axs, axis=0)) == len(axs)
+
+
+def test_one_problemset(sample_input_json):
+    game = Simulator(sample_input_json['coordinates'], sample_input_json['stick_together'])
+    interface = Interface()
+    from ai import Agent
+    agent = Agent()
+
+    action_count = 0
+    while not (interface.goal_test(game)):
+        action = agent.act(interface.perceive(game))
+        interface.evolve(game, action)
+        if not interface.valid_state(game): raise 'reached invalid state'
+        action_count += 1
+    return action_count
+
+
+with open(r"problem_set.txt", 'r') as fp: res=eval(fp.read())
+cost=test_one_problemset(res[int(sys.argv[1])])
+print('\n','\n')
+print(cost)
