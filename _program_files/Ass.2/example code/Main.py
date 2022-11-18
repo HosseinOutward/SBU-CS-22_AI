@@ -41,7 +41,34 @@ sample_input_json={
         [18, 19]
     ]
 }
-
+one_to_complete_cord=[[0, -1, -2],
+                      [0, -1, -1],
+                      [0, -1, 0],
+                      [0, 0, 0],
+                      [-1, 0, 0],
+                      [-2, 0, 0],
+                      [-2, 1, 0],
+                      [-1, 1, 0],
+                      [0, 1, 0],
+                      [0, 1, 1],
+                      [-1, 1, 1],
+                      [-2, 1, 1],
+                      [-2, 0, 1],
+                      [-1, 0, 1],
+                      [0, 0, 1],
+                      [0, -1, 1],
+                      [-1, -1, 1],
+                      [-2, -1, 1],
+                      [-2, -1, 2],
+                      [-1, -1, 2],
+                      [0, -1, 2],
+                      [0, 0, 2],
+                      [-1, 0, 2],
+                      [-2, 0, 2],
+                      [-2, 1, 2],
+                      [-1, 1, 2],
+                      [0, 1, 2]]
+# sample_input_json['coordinates']=one_to_complete_cord
 
 def main():
     game = Simulator(sample_input_json['coordinates'], sample_input_json['stick_together'])
@@ -57,8 +84,8 @@ def main():
         
         print("attempting", action)
         interface.evolve(game, action)
-        if not interface.valid_state(game): raise 'reached invalid state'
         # gui.display(game)
+        if not interface.valid_state(game): raise 'reached invalid state'
         print("\n")
         action_count+=1
 

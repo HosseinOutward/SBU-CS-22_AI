@@ -25,24 +25,22 @@ class Simulator:
         joint_list = np.diff(np.diff(self.coordinates, axis=0), axis=0)
         joint_list = np.arange(1, len(joint_list) + 1)[~(joint_list == [0, 0, 0]).all(axis=1)]
 
-        flat = np.array(self.stick_together).flatten()
-        stick_diff = np.diff(np.diff(flat))
-        stick_ranges = []
-        j = 0
-        for i, a in enumerate(stick_diff):
-            if a != 1 or i < j: continue
-            j = i + 1
-            while stick_diff[j] == 1: j += 1
-            stick_ranges.append(list(range(flat[i - 1], flat[j] + 1)))
-        flat = np.array(stick_ranges).flatten()
-        for sticks in self.stick_together:
-            if sticks[0] in flat: continue
-            stick_ranges.append(sticks)
+        stick_ranges=[]
+        i=0
+        while len(self.stick_together) > i:
+            a=self.stick_together[i][0]
+            b=self.stick_together[i][1]
+            j=i+1
+            while j!=len(self.stick_together) and b==self.stick_together[j][0]:
+                b=self.stick_together[j][1]
+                j+=1
+            stick_ranges.append(list(range(a,b+1)))
+            i=j
 
         is_joint, stick_beads, possible_axi = [], [], []
         for i in range(len(self.coordinates)):
             is_joint.append(i in joint_list)
-            temp=[a for a in stick_ranges if i in a]
+            temp = [a for a in stick_ranges if i in a]
             stick_beads.append([] if len(temp)==0 else temp[0])
             if i == 0 or i == len(self.coordinates) - 1:
                 possible_axi.append([False, False, False])

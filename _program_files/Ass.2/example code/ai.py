@@ -43,7 +43,7 @@ class Agent:
         a = np.unique(axs[0]).shape[0]+\
             np.unique(axs[1]).shape[0]+\
             np.unique(axs[2]).shape[0]
-        return a
+        return (a-9)/len(state.real_joints)
 
     def A_star_ramproblem(self, root_game):
         interface=Interface()
@@ -58,6 +58,7 @@ class Agent:
             # pop first element from queue
             best_i = q_i.get()[1]
             node = p[best_i]
+            p[best_i]=None
 
             # get the list of legal actions
             actions_list = interface.valid_actions(node[0], np.transpose(node[1])[1])
@@ -65,17 +66,20 @@ class Agent:
             for action in actions_list:
                 # copy the current state
                 child_state = interface.copy_state(node[0])
-                
+
                 # take action and change the copied node
                 interface.evolve(child_state, action)
+
+                if not interface.valid_state(child_state): continue
                 
                 # add children to queue
                 new_node = [child_state, [action] + node[1]]
-                q_i.put((self.heuristic(child_state), len(p)))
+                q_i.put((len(node[1])+self.heuristic(child_state), len(p)))
                 p.append( new_node )
                 
                 # return if goal test is true
-                if interface.goal_test(child_state): return [action] + node[1]
+                if interface.goal_test(child_state): return [action] + node[1][:-1]
+
     def BFS_SAMPLE_CODE(self, root_game):
         interface=Interface()
 
@@ -100,8 +104,11 @@ class Agent:
                 # take action and change the copied node
                 interface.evolve(child_state, action)
 
+                if not interface.valid_state(child_state): continue
+
                 # add children to queue
                 q.append([child_state, [action] + node[1]])
 
                 # return if goal test is true
-                if interface.goal_test(child_state): return [action] + node[1]
+                if interface.goal_test(child_state):
+                    return [action] + node[1][:-1]
