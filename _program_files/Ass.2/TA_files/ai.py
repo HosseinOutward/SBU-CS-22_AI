@@ -19,7 +19,6 @@ class Agent:
 
     # the act function takes a json string as input
     # and outputs an action string
-    # ('U' is go up,   'L' is go left,   'R' is go right,   'D' is go down,  'C' is clean tile)
     def act(self, percept):
         # ^^^ DO NOT change the act function above ***
 
@@ -32,8 +31,8 @@ class Agent:
             t0=time()
             initial_state=Simulator(sensor_data['coordinates'], sensor_data['stick_together'])
             self.predicted_actions = alg(initial_state)
+            if self.predicted_actions is None: raise Exception("No solution found")
             print("run time:", time()-t0)
-
         action = self.predicted_actions.pop()
 
         return action
@@ -43,10 +42,10 @@ class Agent:
         # a = np.unique(axs[0]).shape[0]+\
         #     np.unique(axs[1]).shape[0]+\
         #     np.unique(axs[2]).shape[0]
-        a=abs(np.unique(axs[0], return_counts=True)[1]).sum()+\
-        abs(np.unique(axs[1], return_counts=True)[1]).sum()+\
-        abs(np.unique(axs[2], return_counts=True)[1]).sum()
-        return (a-27*3)/len(state.real_joints)
+        a = abs(np.unique(axs[0], return_counts=True)[1]).sum()+\
+            abs(np.unique(axs[1], return_counts=True)[1]).sum()+\
+            abs(np.unique(axs[2], return_counts=True)[1]).sum()
+        return (a-81)/len(state.real_joints)
 
     def A_star_ramproblem(self, root_game):
         interface=Interface()

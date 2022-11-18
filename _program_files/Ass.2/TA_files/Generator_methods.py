@@ -50,7 +50,7 @@ def generate_problem_from_cube(yyy):
         interf=sim.Interface()
         agent = ai.Agent()
         a=interf.valid_actions(env, [])
-        for _ in range(3):
+        for _ in range(np.random.randint(4, 7)):
             al.append(a[np.random.randint(0, len(a))])
             interf.evolve(env, al[-1])
             if not interf.valid_state(env):
@@ -58,7 +58,7 @@ def generate_problem_from_cube(yyy):
                 break
         if interf.goal_test(env): ok=True
         agent.act(interf.perceive(env))
-        if len(agent.predicted_actions)>=1: ok=True
+        if len(agent.predicted_actions)>=np.random.randint(1, 3): ok=True
 
     with open(r"problem_set.txt", 'a') as fp:
         fp.write(interf.perceive(env))
