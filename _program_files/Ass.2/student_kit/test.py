@@ -9,10 +9,11 @@ timeout_sec = 60
 
 score = []
 for i in range(len(res)):
+    print("testing problem", i)
     ok = True
     try:
         t = time()
-        r = subprocess.run([python_dir, r'test_one_problem.py', str(i)], timeout=timeout_sec)
+        r = subprocess.run([python_dir, r'eval_env.py', str(i)], timeout=timeout_sec)
         if r.returncode != 0: raise "code raised error"
         t = time()-t
         score.append({'problem': i, 'status': 'completed', 'run_time': t,            'score': 1 / s})
@@ -20,4 +21,5 @@ for i in range(len(res)):
         score.append({'problem': i, 'status': 'timeout',   'run_time': float('nan'), 'score': 0})
     except:
         score.append({'problem': i, 'status': 'error',     'run_time': float('nan'), 'score': 0})
-print(score)
+    print('result:', score[-1])
+print("whole test\n",score)
